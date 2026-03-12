@@ -3,7 +3,7 @@ package niit.spark
 import org.apache.spark.{SparkConf, SparkContext}
 
 /**
- * 更多MapReduce设计模式
+ * 更多MapRed uce设计模式
  * 功能：展示多种数据处理模式
  * 理解要点：
  * 1. 倒排索引：从文档到单词的映射反转

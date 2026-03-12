@@ -5,7 +5,7 @@ import org.apache.spark.sql.types.{StructType, StructField, StringType, IntegerT
 import org.apache.spark.sql.functions._
 
 /**
- * SparkSQL示例程序
+ * SparkSQL 示例程序
  * 功能：展示DataFrame API和SQL的使用
  */
 object SparkSQLDemo {

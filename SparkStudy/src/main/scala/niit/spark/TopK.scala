@@ -3,7 +3,7 @@ package niit.spark
 import org.apache.spark.{SparkConf, SparkContext}
 
 /**
- * Spark TopK程序
+ * Spark TopK程 序
  * 功能：找出出现次数最多的前K个单词
  * 理解要点：
  * 1. 使用map和reduceByKey进行词频统计

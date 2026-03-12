@@ -7,8 +7,8 @@ import org.apache.spark.{SparkConf, SparkContext}
  * 功能：统计文本文件中每个单词出现的次数
  * 理解要点：
  * 1. SparkContext是Spark程序的入口
- * 2. RDD是弹性分布式数据集
- * 3. flatMap: 将一行文本拆分成单词
+ * 2. RDD是弹性分布 式数据集
+ * 3. flatMap: 将 一行文本拆分成单词
  * 4. map: 将每个单词映射成(单词, 1)键值对
  * 5. reduceByKey: 按键聚合，统计相同单词出现的次数
  */
