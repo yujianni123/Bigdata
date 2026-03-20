@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园反诈智能预警平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #165DFF;
+            --secondary-color: #36BFFA;
+            --success-color: #00B42A;
+            --warning-color: #FF7D00;
+            --danger-color: #F53F3F;
+            --dark-color: #1D2129;
+            --light-color: #F2F3F5;
+            --border-color: #E5E6EB;
+            --text-color: #4E5969;
+            --text-light: #86909C;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+        
+        /* 登录页面 */
+        .login-container {
+            max-width: 450px;
+            margin: 80px auto;
+            padding: 40px;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .login-container:hover {
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .login-container h2 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        
+        .login-container .form-label {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .login-container .form-control {
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .login-container .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(22, 93, 255, 0.1);
+        }
+        
+        .login-container .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .login-container .btn-primary:hover {
+            background-color: #0E47D9;
+            transform: translateY(-2px);
+        }
+        
+        /* 仪表盘页面 */
+        .dashboard {
+            margin-top: 20px;
+        }
+        
+        .navbar {
+            background-color: white !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 0 20px;
+        }
+        
+        .navbar-brand {
+            color: var(--primary-color) !important;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        
+        .navbar-nav .nav-link {
+            color: var(--text-color) !important;
+            font-weight: 500;
+            margin-right: 10px;
+            padding: 15px 10px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: var(--primary-color) !important;
+            background-color: rgba(22, 93, 255, 0.05);
+        }
+        
+        .navbar-nav .nav-link.active {
+            color: var(--primary-color) !important;
+            background-color: rgba(22, 93, 255, 0.1);
+            font-weight: 600;
+        }
+        
+        .card {
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 12px 12px 0 0;
+            padding: 16px 20px;
+        }
+        
+        .card-header h5 {
+            color: var(--dark-color);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .tab-content {
+            padding: 24px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0E47D9;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background-color: var(--text-light);
+            border: none;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--text-color);
+        }
+        
+        /* 表格样式 */
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table th {
+            color: var(--text-light);
+            font-weight: 500;
+            border-bottom: 2px solid var(--border-color);
+            padding: 12px 16px;
+        }
+        
+        .table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: rgba(0,0,0,0.02);
+        }
+        
+        /* 表单样式 */
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 10px 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(22, 93, 255, 0.1);
+        }
+        
+        /* 预警卡片 */
+        .warning-card {
+            border-left: 4px solid var(--warning-color);
+            background-color: rgba(255, 125, 0, 0.05);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 12px;
+        }
+        
+        .warning-card h6 {
+            color: var(--warning-color);
+            margin-bottom: 8px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 40px 20px;
+                padding: 30px;
+            }
+            
+            .navbar-nav .nav-link {
+                padding: 10px;
+            }
+            
+            .tab-content {
+                padding: 16px;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(22, 93, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 登录页面 -->
+    <div id="login-page" class="login-container fade-in">
+        <div class="text-center mb-6">
+            <h2>校园反诈智能预警平台</h2>
+            <p class="text-muted">保护校园安全，远离诈骗风险</p>
+        </div>
+        <form id="login-form">
+            <div class="mb-4">
+                <label for="username" class="form-label">用户名</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="form-label">密码</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mb-4">登录</button>
+        </form>
+        <div id="login-alert" class="alert" style="display: none;"></div>
+        <div class="mt-4 text-center">
+            <p class="text-muted">测试账号：</p>
+            <p><strong>管理员:</strong> admin / admin123</p>
+            <p><strong>学生:</strong> test / test123</p>
+        </div>
+    </div>
+
+    <!-- 仪表盘页面 -->
+    <div id="dashboard-page" style="display: none;">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <i class="fa fa-shield mr-2"></i>校园反诈智能预警平台
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="nav-dashboard" href="#">
+                                <i class="fa fa-dashboard mr-2"></i>仪表盘
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="nav-cases" href="#">
+                                <i class="fa fa-list-alt mr-2"></i>诈骗案例
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="nav-text-check" href="#">
+                                <i class="fa fa-file-text mr-2"></i>文本检测
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="nav-url-check" href="#">
+                                <i class="fa fa-link mr-2"></i>URL检测
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="nav-warnings" href="#">
+                                <i class="fa fa-exclamation-triangle mr-2"></i>预警管理
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" id="logout" href="#">
+                                <i class="fa fa-sign-out mr-2"></i>退出登录
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container dashboard">
+            <!-- 仪表盘内容 -->
+            <div id="dashboard-content" class="tab-content active fade-in">
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <div class="text-primary mb-2"><i class="fa fa-users fa-3x"></i></div>
+                                <h5 class="card-title">总用户数</h5>
+                                <p class="card-text text-3xl font-bold" id="total-users">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <div class="text-warning mb-2"><i class="fa fa-exclamation-circle fa-3x"></i></div>
+                                <h5 class="card-title">今日预警</h5>
+                                <p class="card-text text-3xl font-bold" id="today-warnings">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <div class="text-danger mb-2"><i class="fa fa-bell fa-3x"></i></div>
+                                <h5 class="card-title">高风险用户</h5>
+                                <p class="card-text text-3xl font-bold" id="high-risk-users">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <div class="text-success mb-2"><i class="fa fa-search fa-3x"></i></div>
+                                <h5 class="card-title">今日查询</h5>
+                                <p class="card-text text-3xl font-bold" id="today-queries">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title"><i class="fa fa-pie-chart mr-2"></i>诈骗类型分布</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="fraudTypeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title"><i class="fa fa-bar-chart mr-2"></i>诈骗金额统计</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="fraudAmountChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title"><i class="fa fa-newspaper-o mr-2"></i>最近诈骗案例</h5>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>类型</th>
+                                            <th>描述</th>
+                                            <th>金额</th>
+                                            <th>发生时间</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-cases">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 诈骗案例内容 -->
+            <div id="cases-content" class="tab-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title"><i class="fa fa-list-alt mr-2"></i>诈骗案例列表</h5>
+                        <div class="input-group" style="width: 300px;">
+                            <input type="text" class="form-control" placeholder="搜索案例..." id="case-search">
+                            <button class="btn btn-primary" onclick="searchCases()">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>类型</th>
+                                        <th>描述</th>
+                                        <th>金额</th>
+                                        <th>发生时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cases-list">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4 d-flex justify-content-center" id="pagination"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 文本检测内容 -->
+            <div id="text-check-content" class="tab-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title"><i class="fa fa-file-text mr-2"></i>文本检测</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label for="text-content" class="form-label">文本内容</label>
+                            <textarea class="form-control" id="text-content" rows="5" placeholder="输入需要检测的文本内容，如短信、聊天记录等" required></textarea>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="checkText()">
+                            <i class="fa fa-search mr-2"></i>检测
+                        </button>
+                        <div id="text-result" class="mt-4"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- URL检测内容 -->
+            <div id="url-check-content" class="tab-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title"><i class="fa fa-link mr-2"></i>URL检测</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label for="url-content" class="form-label">URL地址</label>
+                            <input type="text" class="form-control" id="url-content" placeholder="输入需要检测的URL地址" required>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="checkUrl()">
+                            <i class="fa fa-search mr-2"></i>检测
+                        </button>
+                        <div id="url-result" class="mt-4"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 预警管理内容 -->
+            <div id="warnings-content" class="tab-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title"><i class="fa fa-exclamation-triangle mr-2"></i>预警管理</h5>
+                        <button type="button" class="btn btn-primary" onclick="getMyWarnings()">
+                            <i class="fa fa-refresh mr-2"></i>刷新预警列表
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="warnings-result"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 全局变量
+        let accessToken = localStorage.getItem('accessToken');
+        let currentPage = 1;
+        const pageSize = 10;
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 重新获取token，确保页面刷新后仍然存在
+            accessToken = localStorage.getItem('accessToken');
+            console.log('页面加载，token:', accessToken ? accessToken.substring(0, 50) + '...' : '无');
+            
+            if (accessToken) {
+                showDashboard();
+            } else {
+                showLogin();
+            }
+
+            // 登录表单提交
+            document.getElementById('login-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                login();
+            });
+
+            // 退出登录
+            document.getElementById('logout').addEventListener('click', function() {
+                logout();
+            });
+
+            // 导航切换
+            document.getElementById('nav-dashboard').addEventListener('click', function() {
+                switchTab('dashboard');
+            });
+            document.getElementById('nav-cases').addEventListener('click', function() {
+                switchTab('cases');
+            });
+            document.getElementById('nav-text-check').addEventListener('click', function() {
+                switchTab('text-check');
+            });
+            document.getElementById('nav-url-check').addEventListener('click', function() {
+                switchTab('url-check');
+            });
+            document.getElementById('nav-warnings').addEventListener('click', function() {
+                switchTab('warnings');
+            });
+        });
+
+        // 显示登录页面
+        function showLogin() {
+            document.getElementById('login-page').style.display = 'block';
+            document.getElementById('dashboard-page').style.display = 'none';
+        }
+
+        // 显示仪表盘
+        function showDashboard() {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('dashboard-page').style.display = 'block';
+            loadDashboardData();
+        }
+
+        // 登录功能
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const alertDiv = document.getElementById('login-alert');
+
+            fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.access_token) {
+                    accessToken = data.access_token;
+                    localStorage.setItem('accessToken', accessToken);
+                    console.log('登录成功，token:', accessToken);
+                    showDashboard();
+                } else {
+                    alertDiv.className = 'alert alert-danger';
+                    alertDiv.textContent = data.error || '登录失败';
+                    alertDiv.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                alertDiv.className = 'alert alert-danger';
+                alertDiv.textContent = '网络错误，请重试';
+                alertDiv.style.display = 'block';
+                console.error('登录失败:', error);
+            });
+        }
+
+        // 文本检测
+        function checkText() {
+            const text = document.getElementById('text-content').value;
+            const resultDiv = document.getElementById('text-result');
+
+            resultDiv.innerHTML = '<div class="text-center py-4"><div class="loading"></div><p class="mt-2">检测中...</p></div>';
+
+            console.log('发送文本检测请求，token:', accessToken.substring(0, 50) + '...');
+
+            fetch('/api/check/text', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                },
+                body: JSON.stringify({ text })
+            })
+            .then(response => {
+                console.log('响应状态:', response.status);
+                if (response.status === 401) {
+                    // token无效或过期，重新登录
+                    alert('登录已过期，请重新登录');
+                    logout();
+                    return { success: false, error: '登录已过期' };
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('响应数据:', data);
+                if (data.success) {
+                    // 根据风险等级设置不同的样式
+                    let riskClass = '';
+                    switch(data.risk_level) {
+                        case 'high':
+                            riskClass = 'text-danger';
+                            break;
+                        case 'medium':
+                            riskClass = 'text-warning';
+                            break;
+                        case 'low':
+                            riskClass = 'text-success';
+                            break;
+                    }
+
+                    resultDiv.innerHTML = `
+                        <div class="card border-${data.risk_level === 'high' ? 'danger' : data.risk_level === 'medium' ? 'warning' : 'success'}">
+                            <div class="card-body">
+                                <h5 class="card-title">检测结果</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>风险等级:</strong> <span class="${riskClass}">${data.risk_level}</span></p>
+                                        <p><strong>风险评分:</strong> ${data.risk_score}</p>
+                                        <p><strong>诈骗类型:</strong> ${data.fraud_type}</p>
+                                        <p><strong>是否生成预警:</strong> ${data.warning_generated ? '<span class="text-danger">是</span>' : '<span class="text-success">否</span>'}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>匹配关键词:</strong> ${data.matched_keywords.join(', ')}</p>
+                                        <p><strong>建议:</strong> ${data.suggestion}</p>
+                                    </div>
+                                </div>
+                                ${data.similar_cases.length > 0 ? '<h6 class="mt-4">相似案例:</h6><ul class="list-group mt-2">' + data.similar_cases.map(c => `<li class="list-group-item">${c.type}: ${c.description.substring(0, 100)}${c.description.length > 100 ? '...' : ''} (¥${c.amount})</li>`).join('') + '</ul>' : ''}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="alert alert-danger">${data.error || '检测失败'}</div>`;
+                }
+            })
+            .catch(error => {
+                console.error('检测失败:', error);
+                resultDiv.innerHTML = '<div class="alert alert-danger">网络错误，请重试</div>';
+            });
+        }
+
+        // URL检测
+        function checkUrl() {
+            const url = document.getElementById('url-content').value;
+            const resultDiv = document.getElementById('url-result');
+
+            resultDiv.innerHTML = '<div class="text-center py-4"><div class="loading"></div><p class="mt-2">检测中...</p></div>';
+
+            console.log('发送URL检测请求，token:', accessToken.substring(0, 50) + '...');
+
+            fetch('/api/check/url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                },
+                body: JSON.stringify({ url })
+            })
+            .then(response => {
+                console.log('响应状态:', response.status);
+                if (response.status === 401) {
+                    // token无效或过期，重新登录
+                    alert('登录已过期，请重新登录');
+                    logout();
+                    return { success: false, error: '登录已过期' };
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('响应数据:', data);
+                if (data.success) {
+                    // 根据风险等级设置不同的样式
+                    let riskClass = '';
+                    switch(data.risk_level) {
+                        case 'high':
+                            riskClass = 'text-danger';
+                            break;
+                        case 'medium':
+                            riskClass = 'text-warning';
+                            break;
+                        case 'low':
+                            riskClass = 'text-success';
+                            break;
+                    }
+
+                    resultDiv.innerHTML = `
+                        <div class="card border-${data.risk_level === 'high' ? 'danger' : data.risk_level === 'medium' ? 'warning' : 'success'}">
+                            <div class="card-body">
+                                <h5 class="card-title">检测结果</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>风险等级:</strong> <span class="${riskClass}">${data.risk_level}</span></p>
+                                        <p><strong>风险评分:</strong> ${data.risk_score}</p>
+                                        <p><strong>域名:</strong> ${data.domain}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>创建日期:</strong> ${data.creation_date}</p>
+                                        <p><strong>风险原因:</strong> ${data.reasons.join(', ')}</p>
+                                        <p><strong>是否生成预警:</strong> ${data.warning_generated ? '<span class="text-danger">是</span>' : '<span class="text-success">否</span>'}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="alert alert-danger">${data.error || '检测失败'}</div>`;
+                }
+            })
+            .catch(error => {
+                console.error('检测失败:', error);
+                resultDiv.innerHTML = '<div class="alert alert-danger">网络错误，请重试</div>';
+            });
+        }
+
+        // 获取我的预警
+        function getMyWarnings() {
+            const resultDiv = document.getElementById('warnings-result');
+
+            resultDiv.innerHTML = '<div class="text-center py-4"><div class="loading"></div><p class="mt-2">加载中...</p></div>';
+
+            console.log('获取预警列表，token:', accessToken.substring(0, 50) + '...');
+
+            fetch('/api/warnings/my', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+            .then(response => {
+                console.log('响应状态:', response.status);
+                if (response.status === 401) {
+                    // token无效或过期，重新登录
+                    alert('登录已过期，请重新登录');
+                    logout();
+                    return { success: false, error: '登录已过期' };
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('响应数据:', data);
+                if (data.success) {
+                    if (data.warnings.length > 0) {
+                        resultDiv.innerHTML = `
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>原因</th>
+                                            <th>风险评分</th>
+                                            <th>状态</th>
+                                            <th>创建时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${data.warnings.map(w => `
+                                            <tr>
+                                                <td>${w.id}</td>
+                                                <td>${w.reason}</td>
+                                                <td>${w.risk_score}</td>
+                                                <td>${w.status === 'pending' ? '<span class="badge bg-warning">待处理</span>' : '<span class="badge bg-success">已处理</span>'}</td>
+                                                <td>${w.created_at}</td>
+                                                <td>${w.status === 'pending' ? '<button class="btn btn-sm btn-primary" onclick="handleWarning(${w.id})">处理</button>' : '<button class="btn btn-sm btn-secondary" disabled>已处理</button>'}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `;
+                    } else {
+                        resultDiv.innerHTML = '<div class="alert alert-info text-center py-4"><i class="fa fa-info-circle fa-2x mb-2"></i><p>暂无预警记录</p></div>';
+                    }
+                } else {
+                    resultDiv.innerHTML = `<div class="alert alert-danger">${data.error || '获取预警失败'}</div>`;
+                }
+            })
+            .catch(error => {
+                console.error('获取预警失败:', error);
+                resultDiv.innerHTML = '<div class="alert alert-danger">网络错误，请重试</div>';
+            });
+        }
+
+        // 处理预警
+        function handleWarning(warningId) {
+            if (confirm('确定要处理这条预警吗？')) {
+                fetch(`/api/warnings/${warningId}/handle`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                })
+                .then(response => {
+                    if (response.status === 401) {
+                        // token无效或过期，重新登录
+                        alert('登录已过期，请重新登录');
+                        logout();
+                        return { success: false, error: '登录已过期' };
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('预警处理成功');
+                        getMyWarnings();
+                    } else {
+                        alert(`处理失败: ${data.error || '未知错误'}`);
+                    }
+                })
+                .catch(error => {
+                    alert('网络错误，请重试');
+                });
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            localStorage.removeItem('accessToken');
+            accessToken = null;
+            showLogin();
+        }
+
+        // 切换标签页
+        function switchTab(tab) {
+            // 隐藏所有内容
+            document.getElementById('dashboard-content').style.display = 'none';
+            document.getElementById('cases-content').style.display = 'none';
+            document.getElementById('text-check-content').style.display = 'none';
+            document.getElementById('url-check-content').style.display = 'none';
+            document.getElementById('warnings-content').style.display = 'none';
+
+            // 移除所有导航链接的active类
+            document.getElementById('nav-dashboard').className = 'nav-link';
+            document.getElementById('nav-cases').className = 'nav-link';
+            document.getElementById('nav-text-check').className = 'nav-link';
+            document.getElementById('nav-url-check').className = 'nav-link';
+            document.getElementById('nav-warnings').className = 'nav-link';
+
+            // 显示选中的内容
+            document.getElementById(tab + '-content').style.display = 'block';
+            document.getElementById('nav-' + tab).className = 'nav-link active';
+
+            // 加载对应的数据
+            if (tab === 'cases') {
+                currentPage = 1;
+                loadCases();
+            } else if (tab === 'warnings') {
+                getMyWarnings();
+            }
+        }
+
+        // 加载仪表盘数据
+        function loadDashboardData() {
+            // 加载案例数据
+            fetch('/fraud-cases')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        renderCharts(data.data);
+                        renderRecentCases(data.data);
+                    }
+                });
+
+            // 加载统计数据
+            fetch('/api/admin/overview', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+            .then(response => {
+                if (response.status === 401) {
+                    // token无效或过期，重新登录
+                    alert('登录已过期，请重新登录');
+                    logout();
+                    return { success: false, error: '登录已过期' };
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('total-users').textContent = data.overview.total_users;
+                    document.getElementById('today-warnings').textContent = data.overview.today_warnings;
+                    document.getElementById('high-risk-users').textContent = data.overview.high_risk_users;
+                    document.getElementById('today-queries').textContent = data.overview.today_queries;
+                }
+            })
+            .catch(error => {
+                console.error('加载统计数据失败:', error);
+            });
+        }
+
+        // 渲染图表
+        function renderCharts(cases) {
+            // 诈骗类型分布
+            const typeCounts = {};
+            cases.forEach(caseItem => {
+                typeCounts[caseItem.case_type] = (typeCounts[caseItem.case_type] || 0) + 1;
+            });
+
+            const typeLabels = Object.keys(typeCounts);
+            const typeData = Object.values(typeCounts);
+
+            new Chart(document.getElementById('fraudTypeChart'), {
+                type: 'pie',
+                data: {
+                    labels: typeLabels,
+                    datasets: [{
+                        data: typeData,
+                        backgroundColor: [
+                            '#165DFF',
+                            '#36BFFA',
+                            '#00B42A',
+                            '#FF7D00',
+                            '#F53F3F',
+                            '#722ED1',
+                            '#13C2C2',
+                            '#FAAD14'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // 诈骗金额统计
+            const amountData = cases.map(caseItem => caseItem.loss_amount);
+            const amountLabels = cases.map(caseItem => caseItem.case_type);
+
+            new Chart(document.getElementById('fraudAmountChart'), {
+                type: 'bar',
+                data: {
+                    labels: amountLabels,
+                    datasets: [{
+                        label: '诈骗金额（元）',
+                        data: amountData,
+                        backgroundColor: '#165DFF',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // 渲染最近案例
+        function renderRecentCases(cases) {
+            const tbody = document.getElementById('recent-cases');
+            tbody.innerHTML = '';
+
+            cases.slice(0, 5).forEach(caseItem => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${caseItem.case_type}</td>
+                    <td>${caseItem.description.substring(0, 80)}${caseItem.description.length > 80 ? '...' : ''}</td>
+                    <td>¥${caseItem.loss_amount.toFixed(2)}</td>
+                    <td>${caseItem.occurred_at}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // 加载案例列表
+        function loadCases() {
+            const tbody = document.getElementById('cases-list');
+            const pagination = document.getElementById('pagination');
+
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4"><div class="loading"></div><p class="mt-2">加载中...</p></td></tr>';
+
+            fetch(`/api/cases?page=${currentPage}&page_size=${pageSize}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        tbody.innerHTML = '';
+
+                        data.cases.forEach(caseItem => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${caseItem.case_id}</td>
+                                <td>${caseItem.case_type}</td>
+                                <td>${caseItem.description.substring(0, 100)}${caseItem.description.length > 100 ? '...' : ''}</td>
+                                <td>¥${caseItem.loss_amount.toFixed(2)}</td>
+                                <td>${caseItem.occurred_at}</td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+
+                        // 渲染分页
+                        renderPagination(data.total, currentPage, pageSize);
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4"><div class="alert alert-danger">加载失败</div></td></tr>';
+                    }
+                })
+                .catch(error => {
+                    console.error('加载案例失败:', error);
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4"><div class="alert alert-danger">网络错误</div></td></tr>';
+                });
+        }
+
+        // 渲染分页
+        function renderPagination(total, current, pageSize) {
+            const pagination = document.getElementById('pagination');
+            const totalPages = Math.ceil(total / pageSize);
+            
+            let html = '';
+            
+            // 上一页
+            if (current > 1) {
+                html += `<button class="btn btn-outline-primary me-2" onclick="changePage(${current - 1})"><i class="fa fa-chevron-left"></i></button>`;
+            }
+            
+            // 页码
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === current) {
+                    html += `<button class="btn btn-primary me-2">${i}</button>`;
+                } else {
+                    html += `<button class="btn btn-outline-primary me-2" onclick="changePage(${i})"></button>`;
+                }
+            }
+            
+            // 下一页
+            if (current < totalPages) {
+                html += `<button class="btn btn-outline-primary" onclick="changePage(${current + 1})"><i class="fa fa-chevron-right"></i></button>`;
+            }
+            
+            pagination.innerHTML = html;
+        }
+
+        // 切换页码
+        function changePage(page) {
+            currentPage = page;
+            loadCases();
+        }
+
+        // 搜索案例
+        function searchCases() {
+            const searchTerm = document.getElementById('case-search').value;
+            // 这里可以实现搜索功能
+            alert('搜索功能开发中');
+        }
+    </script>
+</body>
+</html>

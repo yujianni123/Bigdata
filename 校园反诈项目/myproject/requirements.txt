@@ -1,0 +1,8 @@
+Flask
+Flask-JWT-Extended
+python-dotenv
+Flask-Limiter
+Flask-WTF
+redis
+prometheus-client
+flask-cors

@@ -1,0 +1,15 @@
+{
+  "max_safe_amount": 5000,
+  "amount_weight": 0.3,
+  "safe_hour_start": 6,
+  "safe_hour_end": 22,
+  "time_weight": 0.2,
+  "suspicious_recipients": [
+    "陌生账户",
+    "个人账户",
+    "境外账户"
+  ],
+  "recipient_weight": 0.4,
+  "max_frequency": 5,
+  "frequency_weight": 0.1
+}
