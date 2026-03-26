@@ -1,9 +1,3 @@
-<archetype>
-  <id>SparkStudy</id>
-  <sources>
-    <source>src/main/java/App.java</source>
-  </sources>
-  <testSources>
-    <source>src/test/java/AppTest.java</source>
-  </testSources>
-</archetype>
+version https://git-lfs.github.com/spec/v1
+oid sha256:afedb6c81af633e101c8b21f1ac044a552d7e6d996fc757c68916621566dc499
+size 206

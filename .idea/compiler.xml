@@ -1,16 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="CompilerConfiguration">
-    <excludeFromCompile>
-      <directory url="file://$PROJECT_DIR$/SparkStudy/src/main/resources/archetype-resources" includeSubdirectories="true" />
-    </excludeFromCompile>
-    <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="SparkStudy" />
-      </profile>
-    </annotationProcessing>
-  </component>
-</project>
+version https://git-lfs.github.com/spec/v1
+oid sha256:45bb3ac4de5607a1e7d82ded8d36a7f05abdb167e73c02d39068a05501a5e569
+size 723

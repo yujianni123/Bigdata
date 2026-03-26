@@ -1,8 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module version="4">
-  <component name="AdditionalModuleElements">
-    <content url="file://$MODULE_DIR$/SparkStudy" dumb="true">
-      <sourceFolder url="file://$MODULE_DIR$/SparkStudy/src/main/scala/niit/spark" isTestSource="false" />
-    </content>
-  </component>
-</module>
+version https://git-lfs.github.com/spec/v1
+oid sha256:1d8e0a36acf3b0b04c5deae561906b23741a31feecf1b4427f68a0be7550b216
+size 322

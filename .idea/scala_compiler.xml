@@ -1,7 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ScalaCompilerConfiguration">
-    <option name="separateProdTestSources" value="true" />
-    <profile name="sbt 1" modules="SparkScheduler,SparkScheduler.main,SparkScheduler.test,SparkStudy" />
-  </component>
-</project>
+version https://git-lfs.github.com/spec/v1
+oid sha256:dab169469ba42875244c2bfb7247fa097bbe68079110bb0b897ed459bc7e6a54
+size 304
